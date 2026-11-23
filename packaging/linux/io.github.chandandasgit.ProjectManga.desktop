@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=ProjectManga
+GenericName=Manga and Novel Reader
+Comment=Read manga and novels
+Exec=projectmanga
+Icon=io.github.chandandasgit.ProjectManga
+Terminal=false
+Categories=Graphics;Viewer;
+Keywords=manga;novel;comics;reader;
+StartupWMClass=ProjectManga
