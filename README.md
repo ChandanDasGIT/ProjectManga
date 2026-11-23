@@ -114,33 +114,29 @@ Requirements: Qt 6.10+ for *Android arm64-v8a* and *Desktop* from the Qt Online 
 (27) from Android Studio's SDK Manager; a JDK (17 or newer). The OpenSSL libraries the APK needs
 are already in `third_party/openssl/arm64-v8a`.
 
-1. Configure and build (adjust the paths to where Qt and the Android tools are):
+1. Make your signing key once, and keep it and its password: Android only updates the app with an
+   APK signed by the same key.
 
    ```sh
-   ~/Qt/6.11.2/android_arm64_v8a/bin/qt-cmake -S . -B build-android -G Ninja \
-       -DCMAKE_BUILD_TYPE=Release -DQT_HOST_PATH=$HOME/Qt/6.11.2/gcc_64 \
-       -DANDROID_SDK_ROOT=$HOME/Android/Sdk -DANDROID_NDK_ROOT=$HOME/Android/Sdk/ndk/27.2.12479018 \
-       -DPROJECTMANGA_SYNC_SERVER=https://<your server> -DPROJECTMANGA_SYNC_KEY=<your key>
-   cmake --build build-android --target appProjectManga
+   keytool -genkeypair -keystore ~/ThisPC/AndroidDev/keys/projectmanga-release.jks \
+           -alias projectmanga -keyalg RSA -keysize 4096 -validity 36500
    ```
 
-2. Make the APK:
+2. Build and sign the APK:
 
    ```sh
-   ~/Qt/6.11.2/gcc_64/bin/androiddeployqt \
-       --input build-android/android-appProjectManga-deployment-settings.json \
-       --output build-android/android-build --gradle
+   PROJECTMANGA_SYNC_SERVER=https://<your server> PROJECTMANGA_SYNC_KEY=<your key> \
+   packaging/android/make-apk.sh
    ```
 
-   The APK is `build-android/android-build/build/outputs/apk/debug/android-build-debug.apk`.
-   It is a debug build, signed with Android's debug key. After rebuilding, copy
-   `build-android/libappProjectManga_arm64-v8a.so` into
-   `build-android/android-build/libs/arm64-v8a/` before running `androiddeployqt` again, or the
-   APK keeps the old copy.
+   It asks for the keystore's password and writes `build-android/ProjectManga-<version>-arm64.apk`.
+   Where the keystore, Qt and the Android tools are is set with `KEYSTORE`, `QT_ANDROID_ARM64`,
+   `QT_HOST_PATH`, `ANDROID_SDK_ROOT` and `ANDROID_NDK_ROOT` (see the top of the script for the
+   defaults).
 
 3. Install it: with the phone connected over USB (USB debugging on),
-   `adb install -r build-android/android-build/build/outputs/apk/debug/android-build-debug.apk`;
-   or copy the APK to the phone, open it and allow installing from that app.
+   `adb install -r build-android/ProjectManga-*-arm64.apk`; or copy the APK to the phone, open it
+   and allow installing from that app.
 
 The library lives in the app's private storage. For server sync, the phone must reach your server
 (for example Tailscale on the phone).
