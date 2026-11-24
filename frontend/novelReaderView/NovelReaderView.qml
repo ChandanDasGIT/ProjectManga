@@ -250,12 +250,22 @@ Item {
                                 opacity: 0.6
                                 font.pixelSize: Theme.bodySize
                             }
-                            ThemedButton {
+                            Row {
                                 anchors.horizontalCenter: parent.horizontalCenter
-                                text: wrap.hasNext ? "Next chapter ›" : "Back to chapters"
-                                accent: true
-                                focusPolicy: Qt.NoFocus
-                                onClicked: wrap.hasNext ? wrap.next() : root.leave()
+                                spacing: Theme.gap
+
+                                ThemedButton {
+                                    text: "‹ Previous chapter"
+                                    visible: wrap.hasPrevious
+                                    focusPolicy: Qt.NoFocus
+                                    onClicked: wrap.previous()
+                                }
+                                ThemedButton {
+                                    text: wrap.hasNext ? "Next chapter ›" : "Back to chapters"
+                                    accent: true
+                                    focusPolicy: Qt.NoFocus
+                                    onClicked: wrap.hasNext ? wrap.next() : root.leave()
+                                }
                             }
                         }
                     }

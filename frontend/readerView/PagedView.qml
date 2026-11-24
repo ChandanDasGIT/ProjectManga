@@ -18,6 +18,7 @@ Item {
     property bool hasPrevious: false
     signal nextChapter()
     signal previousChapter()
+    signal previousChapterFromStart()
     signal lastPageReached()
     signal backToChapters()
     signal moved()
@@ -522,12 +523,22 @@ Item {
             color: Theme.textMuted
             font.pixelSize: Theme.bodySize
         }
-        ThemedButton {
+        Row {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: root.hasNext ? "Next chapter ›" : "Back to chapters"
-            accent: true
-            focusPolicy: Qt.NoFocus
-            onClicked: root.hasNext ? root.nextChapter() : root.backToChapters()
+            spacing: Theme.gap
+
+            ThemedButton {
+                text: "‹ Previous chapter"
+                visible: root.hasPrevious
+                focusPolicy: Qt.NoFocus
+                onClicked: root.previousChapterFromStart()
+            }
+            ThemedButton {
+                text: root.hasNext ? "Next chapter ›" : "Back to chapters"
+                accent: true
+                focusPolicy: Qt.NoFocus
+                onClicked: root.hasNext ? root.nextChapter() : root.backToChapters()
+            }
         }
     }
 }

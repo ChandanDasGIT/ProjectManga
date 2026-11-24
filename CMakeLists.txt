@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(ProjectManga VERSION 0.1 LANGUAGES CXX)
+project(ProjectManga VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -91,6 +91,9 @@ if(ANDROID)
     set_target_properties(appProjectManga PROPERTIES
         QT_ANDROID_PACKAGE_NAME io.github.chandandasgit.projectmanga
         QT_ANDROID_APP_NAME ProjectManga
+        # Android only updates the app to a higher version code: raise it with every new version.
+        QT_ANDROID_VERSION_NAME "${PROJECT_VERSION}"
+        QT_ANDROID_VERSION_CODE 1
         QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/packaging/android"
         QT_ANDROID_APP_ICON "@mipmap/ic_launcher")
     # Wi-Fi sync: many phones drop broadcasts unless the app holds a multicast lock.
