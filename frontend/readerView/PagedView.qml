@@ -254,6 +254,23 @@ Item {
     readonly property real bookWidth: spread ? 2 * Math.max(leftWidth, rightWidth) : singleWidth
     readonly property real bookHeight: spread ? spreadHeight : singleHeight
 
+    // The pages around the shown ones, loaded out of sight so a turn shows them at once instead of
+    // their loading placeholder. Slot k holds the page p of the window with p % 7 == k, so moving
+    // on by a page reloads one slot and the others keep their images.
+    function preloadUrl(slot) {
+        const slots = 7
+        const low = firstVisible() - 2
+        const p = low + ((slot - low) % slots + slots) % slots
+        return p <= lastVisible() + 2 ? urlOf(p) : ""
+    }
+    PageImage { visible: false; width: root.singleWidth; source: root.preloadUrl(0) }
+    PageImage { visible: false; width: root.singleWidth; source: root.preloadUrl(1) }
+    PageImage { visible: false; width: root.singleWidth; source: root.preloadUrl(2) }
+    PageImage { visible: false; width: root.singleWidth; source: root.preloadUrl(3) }
+    PageImage { visible: false; width: root.singleWidth; source: root.preloadUrl(4) }
+    PageImage { visible: false; width: root.singleWidth; source: root.preloadUrl(5) }
+    PageImage { visible: false; width: root.singleWidth; source: root.preloadUrl(6) }
+
     component Leaf: PageImage {
         property int page: -1
         source: root.urlOf(page)
